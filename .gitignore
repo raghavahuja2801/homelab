@@ -26,3 +26,8 @@ apps/adguard/work/
 # OS / misc
 *.log
 *.bak
+
+apps/adguard/config/AdGuardHome.yaml
+apps/adguard/work
+apps/adguard/
+

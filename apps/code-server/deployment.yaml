@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: code-server
+  namespace: development
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: code-server
+  template:
+    metadata:
+      labels:
+        app: code-server
+    spec:
+      securityContext:
+        fsGroup: 1000
+
+      containers:
+      - name: code-server
+        image: lscr.io/linuxserver/code-server:latest
+
+        env:
+        - name: PUID
+          value: "1000"
+
+        - name: PGID
+          value: "1000"
+
+        - name: TZ
+          value: "Asia/Kolkata"
+
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: code-server-secret
+              key: PASSWORD
+
+        ports:
+        - containerPort: 8443
+
+        volumeMounts:
+        - name: config
+          mountPath: /config
+
+        # Mount your projects
+        - name: projects
+          mountPath: /projects
+
+        # Optional SSH keys
+        - name: ssh
+          mountPath: /config/.ssh
+          readOnly: true
+
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: code-server-config
+
+      - name: projects
+        hostPath:
+          path: /home/raghav-ahuja/projects
+          type: Directory
+
+      - name: ssh
+        hostPath:
+          path: /home/raghav-ahuja/.ssh
+          type: Directory

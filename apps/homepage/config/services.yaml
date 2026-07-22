@@ -5,6 +5,11 @@
     - Qdrant:
         href: http://qdrant.lab/dashboard
         icon: qdrant
+- Development:
+    - code-server:
+        href: http://code.lab
+        icon: coder
+
 - Monitoring:
     - Grafana:
         href: http://grafana.lab
@@ -32,7 +37,7 @@
         widget:
           type: adguard
           url: http://100.120.29.116:8080
-          username: ## Add your AdGuard-Home username here     
-          password: ## Add your AdGuard-Home password here     
+          username: raghav-ahuja          
+          password: Raghav3214!      
           fields: ["queries", "blocked", "filtered", "latency"]
 
