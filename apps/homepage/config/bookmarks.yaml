@@ -1,0 +1,27 @@
+# config/bookmarks.yaml
+# Personal links - kept separate from self-hosted services since these
+# aren't things you're monitoring, just quick jump-off links.
+
+- Developer:
+    - GitHub:
+        - href: https://github.com/raghavahuja2801
+          icon: github
+          description: My code profile
+    - LinkedIn:
+        - href: https://linkedin.com/in/ahuja-raghav
+          icon: linkedin
+          description: My professional network
+    - Portfolio:
+        - href: https://raghavahuja2801.github.io/
+          icon: https://raghavahuja2801.github.io/static/media/avatar.5852f40fbb38aa284829fa3fb7722225.svg
+          description: My personal portfolio
+
+- Reading:
+    - Reddit:
+        - href: https://reddit.com
+          icon: reddit
+          description: Front page of the internet
+    - YouTube:
+        - href: https://youtube.com
+          icon: youtube
+          description: Video sharing

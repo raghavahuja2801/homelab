@@ -1,0 +1,53 @@
+# config/settings.yaml
+
+title: Home Lab
+favicon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homepage.svg
+
+theme: dark
+color: slate
+headerStyle: clean
+
+# Command-palette style search across all your services + bookmarks (press "/")
+quicklaunch:
+  searchDescriptions: true
+  hideInternetSearch: false
+  showSearchSuggestions: true
+  hideVisitURL: false
+
+layout:
+  # Groups with a live-stats widget get "row" style so the stat boxes have room
+  Infrastructure:
+    style: row
+    columns: 2
+
+  Monitoring:
+    style: row
+    columns: 1
+
+  # Plain link groups (no widget) get compact "grid" tiles instead of
+  # stretching a single card into an empty full-width bar
+  Automation:
+    style: grid
+    columns: 3
+
+  Storage:
+    style: grid
+    columns: 3
+
+  Media:
+    style: grid
+    columns: 3
+
+  Budget:
+    style: grid
+    columns: 3
+
+  Developer:
+    style: grid
+    columns: 3
+
+  Reading:
+    style: grid
+    columns: 3
+
+hideVersion: false

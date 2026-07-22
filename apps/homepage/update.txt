@@ -1,0 +1,11 @@
+# Update your local config
+vim config/services.yaml
+
+# Copy to the node
+sudo cp config/*.yaml /opt/homepage/config/
+
+# Restart the pod to pick up changes
+kubectl rollout restart deployment/homepage -n homepage
+
+# Watch it roll out
+kubectl rollout status deployment/homepage -n homepage

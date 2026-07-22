@@ -1,0 +1,12 @@
+# config/widgets.yaml
+
+- resources:
+    label: System
+    cpu: true
+    memory: true
+    disk: /
+
+
+- search:
+    provider: google
+    target: _blank

@@ -1,0 +1,28 @@
+# Secrets & credentials — never commit these
+**/secret.yaml
+**/secrets.yaml
+**/.env
+**/.env.*
+**/*.pem
+**/*.key
+**/*.cert
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# AdGuard working data
+apps/adguard/work/
+
+# Helm / Chart dependencies
+**/charts/
+**/tmpcharts/
+
+# OS / misc
+*.log
+*.bak

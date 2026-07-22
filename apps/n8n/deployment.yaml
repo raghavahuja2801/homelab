@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: n8n
+  namespace: n8n
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: n8n
+
+  template:
+    metadata:
+      labels:
+        app: n8n
+
+    spec:
+      securityContext:
+        fsGroup: 1000        # <-- ensures the PVC is group-writable by uid 1000 (node user)
+
+      containers:
+      - name: n8n
+
+        image: docker.n8n.io/n8nio/n8n:latest
+
+        ports:
+        - containerPort: 5678
+
+        env:
+        - name: N8N_HOST
+          value: n8n.lab
+
+        - name: N8N_PROTOCOL
+          value: http   # if you're not using HTTPS internally
+
+        - name: WEBHOOK_URL
+          value: https://n8n.lab/
+
+        - name: TZ
+          value: "Asia/Kolkata"
+
+        - name: N8N_ENCRYPTION_KEY
+          value: "change-this-to-a-long-random-string"
+
+        volumeMounts:
+        - mountPath: /home/node/.n8n
+          name: data
+
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: n8n-data

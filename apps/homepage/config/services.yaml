@@ -1,0 +1,38 @@
+- Automation:
+    - n8n:
+        href: https://n8n.lab
+        icon: n8n
+    - Qdrant:
+        href: http://qdrant.lab/dashboard
+        icon: qdrant
+- Monitoring:
+    - Grafana:
+        href: http://grafana.lab
+        icon: grafana
+- Budget:
+    - Actual-Budget:
+        href: https://actual.lab
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/actual-budget.svg
+- Storage:
+    - MinIO:
+        href: http://minio.lab
+        icon: minio
+- Media:
+    - Jellyfin:
+        href: http://jellyfin.lab
+        icon: jellyfin
+- Infrastructure:
+    - PlantUML:
+        href: http://plantuml.lab
+        icon: mdi-file-tree
+    - AdGuard-Home:
+        href: http://100.120.29.116:8080
+        icon: adguard-home
+        description: Network-wide DNS ad-blocking
+        widget:
+          type: adguard
+          url: http://100.120.29.116:8080
+          username: ## Add your AdGuard-Home username here     
+          password: ## Add your AdGuard-Home password here     
+          fields: ["queries", "blocked", "filtered", "latency"]
+

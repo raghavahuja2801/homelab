@@ -1,0 +1,13 @@
+# homepage-config.yaml - This is the ConfigMap generator
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homepage-config
+  namespace: homepage
+data:
+  services.yaml: |
+    {{ .Files.Get "config/services.yaml" }}
+  settings.yaml: |
+    {{ .Files.Get "config/settings.yaml" }}
+  widgets.yaml: |
+    {{ .Files.Get "config/widgets.yaml" }}

@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plex
+  namespace: plex
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: plex
+
+  template:
+    metadata:
+      labels:
+        app: plex
+
+    spec:
+      containers:
+      - name: plex
+
+        image: lscr.io/linuxserver/plex:latest
+
+        env:
+        - name: PUID
+          value: "1000"
+
+        - name: PGID
+          value: "1000"
+
+        - name: TZ
+          value: "Asia/Kolkata"
+
+        - name: VERSION
+          value: "docker"
+
+        - name: PLEX_CLAIM
+          value: "claim-iCiV8AGVW-J5-5agrQKY"
+
+        ports:
+        - containerPort: 32400
+ 
+        volumeMounts:
+
+        - name: config
+          mountPath: /config
+
+        - name: movies
+          mountPath: /movies
+
+        - name: tv
+          mountPath: /tv
+
+        - name: music
+          mountPath: /music
+
+        - name: photos
+          mountPath: /photos
+
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+
+      volumes:
+
+      - name: config
+        persistentVolumeClaim:
+          claimName: plex-config
+
+      - name: movies
+        hostPath:
+          path: /srv/media/movies
+
+      - name: tv
+        hostPath:
+          path: /srv/media/tv
+
+      - name: music
+        hostPath:
+          path: /srv/media/music
+
+      - name: photos
+        hostPath:
+          path: /srv/media/photos

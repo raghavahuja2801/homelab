@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: plex
+  namespace: plex
+
+spec:
+  ingressClassName: traefik
+
+  rules:
+  - host: plex.home
+
+    http:
+      paths:
+
+      - path: /
+        pathType: Prefix
+
+        backend:
+          service:
+            name: plex
+
+            port:
+              number: 32400
