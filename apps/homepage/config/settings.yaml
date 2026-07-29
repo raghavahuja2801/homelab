@@ -19,6 +19,9 @@ layout:
   Infrastructure:
     style: row
     columns: 2
+  Development:
+   style: row
+  columns: 1
 
   Monitoring:
     style: row

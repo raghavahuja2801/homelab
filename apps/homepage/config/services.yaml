@@ -5,23 +5,34 @@
     - Qdrant:
         href: http://qdrant.lab/dashboard
         icon: qdrant
+
 - Development:
     - code-server:
-        href: http://code.lab
+        href: https://code.lab
         icon: coder
+
+    - interview-prep:
+        href: http://interview.lab
+        icon: https://icon.icepanel.io/Technology/svg/Playwrite.svg
 
 - Monitoring:
     - Grafana:
         href: http://grafana.lab
         icon: grafana
+
 - Budget:
-    - Actual-Budget:
+    - Actual Budget:
         href: https://actual.lab
         icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/actual-budget.svg
+
 - Storage:
     - MinIO:
         href: http://minio.lab
         icon: minio
+    - MongoDB:
+        href: http://mongo.lab
+        icon: mongodb
+
 - Media:
     - Jellyfin:
         href: http://jellyfin.lab
