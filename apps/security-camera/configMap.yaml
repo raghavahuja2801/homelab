@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mediamtx-config
+  namespace: camera
+data:
+  mediamtx.yml: |
+    logLevel: info
+
+    api: yes
+    apiAddress: :9997
+
+    rtsp: yes
+    rtspAddress: :8554
+
+    hls: yes
+    hlsAddress: :8888
+
+    webrtc: yes
+    webrtcAddress: :8889
+
+    paths:
+      # source is set by MTX_PATHS_CAMERA_SOURCE (from the camera-credentials
+      # Secret) so the camera's RTSP credentials stay out of git.
+      camera:
+        source: publisher

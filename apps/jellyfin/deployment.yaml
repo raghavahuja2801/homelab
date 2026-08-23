@@ -56,5 +56,5 @@ spec:
 
       - name: media
         hostPath:
-          path: /home/raghav-ahuja/media
+          path: /mnt/jellyfin-media
           type: Directory

@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redisinsight
+  namespace: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redisinsight
+  template:
+    metadata:
+      labels:
+        app: redisinsight
+    spec:
+      containers:
+        - name: redisinsight
+          image: redis/redisinsight:latest
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 5540
+              name: http
+
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+
+          volumeMounts:
+            - name: redisinsight-data
+              mountPath: /data
+
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 5540
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 5540
+            initialDelaySeconds: 30
+            periodSeconds: 20
+
+      volumes:
+        - name: redisinsight-data
+          persistentVolumeClaim:
+            claimName: redisinsight-data

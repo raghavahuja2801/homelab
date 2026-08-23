@@ -21,7 +21,10 @@ layout:
     columns: 2
   Development:
    style: row
-  columns: 1
+   columns: 1
+  Cameras:
+    style: row
+    columns: 2
 
   Monitoring:
     style: row

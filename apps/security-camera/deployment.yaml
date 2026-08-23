@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mediamtx
+  namespace: camera
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mediamtx
+  template:
+    metadata:
+      labels:
+        app: mediamtx
+    spec:
+      containers:
+        - name: mediamtx
+          image: bluenviron/mediamtx:1.15.4
+          ports:
+            - name: rtsp
+              containerPort: 8554
+            - name: hls
+              containerPort: 8888
+            - name: webrtc
+              containerPort: 8889
+            - name: api
+              containerPort: 9997
+          volumeMounts:
+            - name: config
+              mountPath: /mediamtx.yml
+              subPath: mediamtx.yml
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+      volumes:
+        - name: config
+          configMap:
+            name: mediamtx-config

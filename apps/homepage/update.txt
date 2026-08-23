@@ -9,3 +9,12 @@ kubectl rollout restart deployment/homepage -n homepage
 
 # Watch it roll out
 kubectl rollout status deployment/homepage -n homepage
+
+# ------------------------------------------------------------------
+# If you changed the manifests themselves (deployment.yaml, service.yaml,
+# ingress.yaml), apply them instead:
+#   kubectl apply -f apps/homepage/
+#
+# Homepage reads config straight from /opt/homepage/config (hostPath mount),
+# so there are no ConfigMaps to worry about. New disks for the resources
+# widget must be mounted in deployment.yaml AND be present on the node.

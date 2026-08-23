@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:8-alpine
+          imagePullPolicy: IfNotPresent
+
+          args:
+            - redis-server
+            - --appendonly
+            - "yes"
+            - --save
+            - "60"
+            - "1"
+
+          ports:
+            - containerPort: 6379
+              name: redis
+
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 100m
+            limits:
+              memory: 1Gi
+              cpu: 500m
+
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data
+
+          livenessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+          readinessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 5
+            periodSeconds: 5
+
+      volumes:
+        - name: redis-data
+          persistentVolumeClaim:
+            claimName: redis-data
