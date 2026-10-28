@@ -19,8 +19,8 @@
     disk: /mnt/storage
 
 - resources:
-    label: Jellyfin Media
-    disk: /mnt/jellyfin-media
+    label: Jellyfin Metadata
+    disk: /mnt/jellyfin-data
 
 
 - search:
