@@ -1,0 +1,63 @@
+# Shared bench directory. Every ERPNext component (backend, frontend, websocket,
+# workers, scheduler, and the one-off Jobs) mounts this same volume — it holds
+# sites/common_site_config.json, the site itself, and uploaded files.
+#
+# ReadWriteOnce is fine here: this is a single-node cluster, and RWO is enforced
+# per-node, so all pods on the node can mount it simultaneously.
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: erpnext-sites-pv
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: erpnext-local
+  hostPath:
+    path: /mnt/storage/erpnext/sites
+    type: Directory
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: erpnext-sites
+  namespace: erpnext
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: erpnext-local
+  volumeName: erpnext-sites-pv
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: erpnext-logs-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: erpnext-local
+  hostPath:
+    path: /mnt/storage/erpnext/logs
+    type: Directory
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: erpnext-logs
+  namespace: erpnext
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: erpnext-local
+  volumeName: erpnext-logs-pv
+  resources:
+    requests:
+      storage: 5Gi

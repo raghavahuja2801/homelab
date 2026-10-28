@@ -1,0 +1,77 @@
+# One-shot bootstrap for the shared bench directory. Runs before anything else
+# can work: writes sites/apps.txt and sites/common_site_config.json, which is how
+# every other ERPNext component discovers MariaDB and Redis.
+#
+# `bench set-config -g` writes to $PWD/common_site_config.json, and the bench CLI
+# chdirs into sites/, so running from the image's default workdir is correct.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: erpnext-configurator
+  namespace: erpnext
+spec:
+  backoffLimit: 6
+  template:
+    metadata:
+      labels:
+        app: erpnext-configurator
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: configurator
+          image: frappe/erpnext:v15.121.2
+          command:
+            - bash
+            - -c
+            - |
+              set -e
+
+              # Wait for the datastores to accept connections before writing config.
+              wait-for-it -t 120 mariadb:3306
+              wait-for-it -t 120 redis-cache:6379
+              wait-for-it -t 120 redis-queue:6379
+
+              echo "Writing sites/apps.txt..."
+              ls -1 apps > sites/apps.txt
+
+              # `bench set-config` reads the file before writing it, so it must
+              # exist first. Docker seeds this from the image into a fresh named
+              # volume; a Kubernetes PVC starts genuinely empty, so create it.
+              if [ ! -f sites/common_site_config.json ]; then
+                echo "Seeding empty sites/common_site_config.json"
+                echo '{}' > sites/common_site_config.json
+              fi
+
+              echo "Writing sites/common_site_config.json..."
+              bench set-config -g db_host "$DB_HOST"
+              bench set-config -gp db_port "$DB_PORT"
+              bench set-config -g redis_cache "redis://$REDIS_CACHE:6379"
+              bench set-config -g redis_queue "redis://$REDIS_QUEUE:6379"
+              bench set-config -g redis_socketio "redis://$REDIS_QUEUE:6379"
+              bench set-config -gp socketio_port "$SOCKETIO_PORT"
+
+              echo "--- common_site_config.json ---"
+              cat sites/common_site_config.json
+          env:
+            - name: DB_HOST
+              value: mariadb
+            - name: DB_PORT
+              value: "3306"
+            - name: REDIS_CACHE
+              value: redis-cache
+            - name: REDIS_QUEUE
+              value: redis-queue
+            - name: SOCKETIO_PORT
+              value: "9000"
+          volumeMounts:
+            - name: sites
+              mountPath: /home/frappe/frappe-bench/sites
+            - name: logs
+              mountPath: /home/frappe/frappe-bench/logs
+      volumes:
+        - name: sites
+          persistentVolumeClaim:
+            claimName: erpnext-sites
+        - name: logs
+          persistentVolumeClaim:
+            claimName: erpnext-logs
