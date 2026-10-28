@@ -16,6 +16,12 @@ spec:
       containers:
         - name: mediamtx
           image: bluenviron/mediamtx:1.15.4
+          env:
+            - name: MTX_PATHS_CAMERA_SOURCE
+              valueFrom:
+                secretKeyRef:
+                  name: camera-credentials
+                  key: RTSP_URL
           ports:
             - name: rtsp
               containerPort: 8554
