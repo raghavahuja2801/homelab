@@ -11,6 +11,14 @@
         href: https://code.lab
         icon: coder
 
+    - PlantUML:
+        href: http://plantuml.lab
+        icon: plantuml
+
+    - Excalidraw:
+        href: http://draw.lab
+        icon: excalidraw
+
     - interview-prep:
         href: http://interview.lab
         icon: https://icon.icepanel.io/Technology/svg/Playwrite.svg
@@ -35,6 +43,9 @@
         icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/actual-budget.svg
 
 - Storage:
+    - Paperless:
+        href: http://paperless.lab
+        icon: paperless
     - MinIO:
         href: http://minio.lab
         icon: minio
@@ -73,17 +84,21 @@
           password: "{{HOMEPAGE_VAR_QBITTORRENT_PASSWORD}}"
 
 - Infrastructure:
-    - PlantUML:
-        href: http://plantuml.lab
-        icon: mdi-file-tree
     - AdGuard-Home:
-        href: http://100.120.29.116:8080
+        href: http://100.120.29.116:3000
         icon: adguard-home
         description: Network-wide DNS ad-blocking
         widget:
           type: adguard
-          url: http://100.120.29.116:8080
-          username: raghav-ahuja          
+          url: http://100.120.29.116:3000
+          username: admin
           password: "{{HOMEPAGE_VAR_ADGUARD_PASSWORD}}"
           fields: ["queries", "blocked", "filtered", "latency"]
+    - Network:
+        icon: myspeed
+        href: http://myspeed.lab
+        widget:
+          type: myspeed
+          url: http://myspeed.myspeed.svc.cluster.local:5216
+          password: "{{HOMEPAGE_VAR_MYSPEED_PASSWORD}}"
 

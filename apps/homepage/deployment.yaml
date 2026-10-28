@@ -24,6 +24,12 @@ spec:
         - name: TZ
           value: "Asia/Kolkata"
 
+        # Widget credentials, referenced in services.yaml as {{HOMEPAGE_VAR_*}}.
+        # The Secret lives in secret.yaml, which is gitignored.
+        envFrom:
+        - secretRef:
+            name: homepage-secret
+
         ports:
         - containerPort: 3000
           name: http
@@ -58,7 +64,7 @@ spec:
           mountPath: /mnt/storage
           readOnly: true
         - name: jellyfin-media
-          mountPath: /mnt/jellyfin-media
+          mountPath: /mnt/jellyfin-data
           readOnly: true
 
       volumes:
@@ -80,5 +86,5 @@ spec:
           type: Directory
       - name: jellyfin-media
         hostPath:
-          path: /mnt/jellyfin-media
+          path: /mnt/jellyfin-data
           type: Directory
