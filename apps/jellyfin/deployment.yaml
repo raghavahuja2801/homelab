@@ -45,16 +45,26 @@ spec:
         - name: media
           mountPath: /media
 
+        - name: dri
+          mountPath: /dev/dri
+
       volumes:
 
       - name: config
-        persistentVolumeClaim:
-          claimName: jellyfin-config
+        hostPath:
+          path: /mnt/nas/config
+          type: Directory
 
       - name: cache
-        emptyDir: {}
-
+        hostPath:
+          path: /mnt/nas/cache
+          type: Directory
       - name: media
         hostPath:
-          path: /home/raghav-ahuja/media
+          path: /mnt/nas
+          type: Directory
+
+      - name: dri
+        hostPath:
+          path: /dev/dri
           type: Directory

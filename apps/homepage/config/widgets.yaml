@@ -3,8 +3,24 @@
 - resources:
     label: System
     cpu: true
+
+- resources:
+    label: RAM
     memory: true
+- resources:
+    label: SSD
     disk: /
+- resources:
+    label: NAS
+    disk: /mnt/nas
+
+- resources:
+    label: Storage
+    disk: /mnt/storage
+
+- resources:
+    label: Jellyfin Metadata
+    disk: /mnt/jellyfin-data
 
 
 - search:

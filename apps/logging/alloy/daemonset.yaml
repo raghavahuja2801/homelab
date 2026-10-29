@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: alloy
+  namespace: logging
+spec:
+  selector:
+    matchLabels:
+      app: alloy
+  template:
+    metadata:
+      labels:
+        app: alloy
+    spec:
+      serviceAccountName: alloy
+
+      containers:
+        - name: alloy
+          image: grafana/alloy:v1.11.0
+          args:
+            - run
+            - /etc/alloy/config.alloy
+            - --storage.path=/var/lib/alloy/data
+
+          ports:
+            - containerPort: 12345
+
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 300m
+              memory: 512Mi
+
+          volumeMounts:
+            - name: config
+              mountPath: /etc/alloy
+
+            - name: pods
+              mountPath: /var/log/pods
+              readOnly: true
+
+            - name: containers
+              mountPath: /var/log/containers
+              readOnly: true
+
+            - name: alloy-data
+              mountPath: /var/lib/alloy/data
+            
+            - name: journal
+              readOnly: true
+              mountPath: /var/log/journal
+
+            - name: machine-id
+              readOnly: true
+              mountPath: /etc/machine-id
+
+      volumes:
+        - name: config
+          configMap:
+            name: alloy-config
+
+        - name: pods
+          hostPath:
+            path: /var/log/pods
+
+        - name: containers
+          hostPath:
+            path: /var/log/containers
+
+        - name: alloy-data
+          hostPath:
+            path: /var/lib/alloy
+            type: DirectoryOrCreate
+        - name: journal
+          hostPath:
+            path: /var/log/journal
+            type: Directory
+        - name: machine-id
+          hostPath:
+            path: /etc/machine-id
+            type: File

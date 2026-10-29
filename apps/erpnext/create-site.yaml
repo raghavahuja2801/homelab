@@ -1,0 +1,106 @@
+# Creates the ERPNext site itself. `bench new-site` provisions the MariaDB
+# database and user, then installs the erpnext app into it.
+#
+# Runs once: the script exits early if the site directory already exists, so
+# re-applying this manifest is a no-op rather than an error.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: erpnext-create-site
+  namespace: erpnext
+spec:
+  backoffLimit: 6
+  template:
+    metadata:
+      labels:
+        app: erpnext-create-site
+    spec:
+      restartPolicy: OnFailure
+      initContainers:
+        # The configurator is a separate Job, so it may still be running when
+        # this one starts. Block until it has published the shared config.
+        - name: wait-for-config
+          image: frappe/erpnext:v15.121.2
+          command:
+            - bash
+            - -c
+            - |
+              attempts=0
+              until [ -f sites/common_site_config.json ] \
+                && [ -n "$(jq -r '.db_host // empty' sites/common_site_config.json)" ] \
+                && [ -n "$(jq -r '.redis_cache // empty' sites/common_site_config.json)" ] \
+                && [ -n "$(jq -r '.redis_queue // empty' sites/common_site_config.json)" ]; do
+                attempts=$((attempts + 1))
+                if [ "$attempts" -gt 60 ]; then
+                  echo "Timed out after 300s waiting for common_site_config.json" >&2
+                  exit 1
+                fi
+                echo "Waiting for sites/common_site_config.json to be created"
+                sleep 5
+              done
+              echo "Found sites/common_site_config.json:"
+              cat sites/common_site_config.json
+          volumeMounts:
+            - name: sites
+              mountPath: /home/frappe/frappe-bench/sites
+      containers:
+        - name: create-site
+          image: frappe/erpnext:v15.121.2
+          command:
+            - bash
+            - -c
+            - |
+              set -uo pipefail
+
+              if [ -d sites/janak.medical ]; then
+                echo "Site janak.medical already exists — skipping creation."
+                exit 0
+              fi
+
+              echo "Creating site janak.medical..."
+              bench new-site janak.medical \
+                --db-host mariadb \
+                --db-port 3306 \
+                --mariadb-user-host-login-scope=% \
+                --db-root-username root \
+                --db-root-password "$MARIADB_ROOT_PASSWORD" \
+                --admin-password "$ADMIN_PASSWORD" \
+                --install-app erpnext \
+                --set-default
+              status=$?
+
+              if [ "$status" -ne 0 ]; then
+                # A concurrent retry may have won the race; that is not fatal.
+                if [ -d sites/janak.medical ]; then
+                  echo "Site directory exists despite non-zero exit — treating as success."
+                  exit 0
+                fi
+                echo "bench new-site failed with status $status" >&2
+                exit "$status"
+              fi
+
+              echo "Done. Sites present:"
+              ls -1 sites
+          env:
+            - name: MARIADB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secret
+                  key: root-password
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: erpnext-admin-secret
+                  key: admin-password
+          volumeMounts:
+            - name: sites
+              mountPath: /home/frappe/frappe-bench/sites
+            - name: logs
+              mountPath: /home/frappe/frappe-bench/logs
+      volumes:
+        - name: sites
+          persistentVolumeClaim:
+            claimName: erpnext-sites
+        - name: logs
+          persistentVolumeClaim:
+            claimName: erpnext-logs

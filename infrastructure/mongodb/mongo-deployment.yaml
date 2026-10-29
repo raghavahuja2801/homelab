@@ -20,6 +20,13 @@ spec:
           ports:
             - containerPort: 27017
 
+          env:
+            # Kernel 6.19+ breaks the rseq ABI that MongoDB's bundled TCMalloc
+            # relies on, so mongod aborts at startup (SERVER-121912).
+            # Re-enabling rseq for glibc works around it until the fix ships.
+            - name: GLIBC_TUNABLES
+              value: glibc.pthread.rseq=1
+
           envFrom:
             - secretRef:
                 name: mongodb-secret

@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myspeed
+  namespace: myspeed
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: myspeed.lab
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: myspeed
+                port:
+                  number: 5216

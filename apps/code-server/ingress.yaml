@@ -4,7 +4,6 @@ metadata:
   name: code-server
   namespace: development
 spec:
-  ingressClassName: traefik
 
   rules:
   - host: code.lab

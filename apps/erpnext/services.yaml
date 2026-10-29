@@ -1,0 +1,37 @@
+# Only the frontend is exposed outside the cluster. The backend and websocket
+# services exist so nginx can reach them by name (BACKEND/SOCKETIO env vars).
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: erpnext
+spec:
+  selector:
+    app: erpnext-backend
+  ports:
+    - port: 8000
+      targetPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: websocket
+  namespace: erpnext
+spec:
+  selector:
+    app: erpnext-websocket
+  ports:
+    - port: 9000
+      targetPort: 9000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: erpnext
+spec:
+  selector:
+    app: erpnext-frontend
+  ports:
+    - port: 8080
+      targetPort: 8080
